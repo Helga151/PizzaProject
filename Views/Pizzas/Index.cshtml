@@ -1,0 +1,80 @@
+﻿@model IEnumerable<PizzaProject.Models.Pizza>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Pizza Menu</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<form asp-controller="Pizzas" asp-action="Index" method="get">
+    <div class="form-group">
+        <input type="text" name="search" class="form-control" placeholder="Search pizza by name" value="@ViewBag.Search" />
+        <input type="submit" value="Search" class="btn btn-primary" />
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Size)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Dough)
+            </th>            
+            <th>
+                @Html.DisplayNameFor(model => model.Toppings)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <a asp-action="Details" asp-controller="Pizzas" asp-route-id="@item.Id">
+                    @Html.DisplayFor(modelItem => item.Id). @Html.DisplayFor(modelItem => item.Name)
+                </a>
+            </td>
+            <td>
+                <span>@Html.DisplayFor(modelItem => item.Price) zł</span>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Size)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dough)
+            </td>            
+            <td>
+                @foreach (var topping in item.Toppings)
+                {
+                    //last topping - skip comma
+                    if (item.Toppings.IndexOf(topping) == item.Toppings.Count - 1)
+                    {
+                        <span>@Html.ActionLink(topping.Name, "Details", "Toppings", new { Id = topping.Id }, null)</span>
+                    } 
+                    else
+                    {
+                        <span>@Html.ActionLink(topping.Name, "Details", "Toppings", new { Id = topping.Id }, null), </span>
+                    }
+                }
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

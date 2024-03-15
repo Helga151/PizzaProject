@@ -1,0 +1,67 @@
+﻿@model PizzaProject.Models.Pizza
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete pizza?</h3>
+<div>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@Html.DisplayFor(model => model.Price) zł</span>
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Size)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Size)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Dough)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Dough)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Toppings)
+        </dt>
+        <dd class="col-sm-10">
+            <ul>
+                @foreach (var topping in Model.Toppings)
+                {
+                    <li>@Html.ActionLink(topping.Name, "Details", "Toppings", new { Id = topping.Id }, null)</li>
+                }
+            </ul>
+        </dd>
+    </dl>
+    
+    <form id="deleteForm" asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
+
+
+@section Scripts {
+    <script>
+        document.getElementById("deleteForm").addEventListener("submit", function (event) {
+            var confirmed = confirm("Do you really want to delete this pizza?");
+            if (!confirmed) {
+                event.preventDefault();
+            }
+        });
+    </script>
+
+}

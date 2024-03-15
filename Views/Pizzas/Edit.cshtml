@@ -1,0 +1,91 @@
+﻿@model PizzaProject.Models.Pizza
+
+@{
+    ViewData["Title"] = "Edit";
+    var sizes = Enum.GetValues(typeof(Size)).Cast<Size>();
+    var doughs = Enum.GetValues(typeof(Dough)).Cast<Dough>();
+}
+
+<h1>Edit</h1>
+
+<h4>Pizza</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" id="pizza-price" type="number" min="0" step=".01" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Size" class="control-label"></label>
+                <select asp-for="Size" class="form-control">
+                    @foreach (var size in sizes)
+                    {
+                        <option value="@size">
+                            @size.ToString()
+                        </option>
+                    }
+                </select>
+                <span asp-validation-for="Size" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Dough" class="control-label"></label>
+                <select asp-for="Dough" class="form-control">
+                    @foreach (var dough in doughs)
+                    {
+                        <option value="@dough">
+                            @dough.ToString()
+                        </option>
+                    }
+                </select>
+                <span asp-validation-for="Dough" class="text-danger"></span>
+            </div>
+            <div class="form-group" id="toppingsContainer">
+                <label asp-for="Toppings" class="control-label"></label>
+                <select asp-for="Toppings" class="form-select" id="multiple-select-clear-field" data-placeholder="Choose toppings" multiple>
+                    @foreach (var topping in ViewBag.ToppingsName)
+                    {
+                        <option value="@topping"
+                            selected="@(Model.Toppings.FirstOrDefault(i => i.Name == topping) != null)">
+                            @topping
+                        </option>
+                    }
+                </select>
+                <span asp-validation-for="Toppings" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $('#multiple-select-clear-field').select2({
+            theme: "bootstrap-5",
+            placeholder: $(this).data('placeholder'),
+            closeOnSelect: false,
+            allowClear: false,
+        });
+
+        $("#pizza-price").blur(function () {
+            this.value = parseFloat(this.value).toFixed(2);
+        });
+    </script>
+}
